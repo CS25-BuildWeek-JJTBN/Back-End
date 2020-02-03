@@ -67,8 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'herokuapp',
+    'django.middleware.common.mmonMiddleware',
 ]
 
 ROOT_URLCONF = 'adv_project.urls'
@@ -103,7 +102,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 DATABASES['default'].update(prod_db)
 
 

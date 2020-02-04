@@ -15,6 +15,7 @@ class Room(models.Model):
     w_to = models.IntegerField(default=0)
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
+    items = models.OneToManyField(Item)
     def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:
@@ -48,6 +49,16 @@ class Room(models.Model):
             'e_to': self.e_to,
             'w_to': self.w_to
         }
+    def remove_item(self, item_id):
+        item = Item.objects.get(id=item_id)
+        Room.items.remove(item)
+
+    def add_item(self, item_id):
+        item = Item.objects.get(id=item_id)
+        Room.items.add(item)
+
+class Item(models.Model):
+    description = description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
 
 
 class Player(models.Model):
@@ -55,6 +66,7 @@ class Player(models.Model):
     currentRoom = models.IntegerField(default=0)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     visited_rooms = models.ManyToManyField(Room)
+    items_carrying = models.ManyToManyField(Item)
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.first().id
@@ -66,7 +78,14 @@ class Player(models.Model):
         except Room.DoesNotExist:
             self.initialize()
             return self.room()
+    def get(self, item_id):
+        item = Item.objects.get(id=item_id)
+        self.items_carrying.add(item)
+    def drop(self, item_id):
+        item = Item.objects.remove(id=item_id)
+        self.items_carrying.remove(item)
 
+        
 @receiver(post_save, sender=User)
 def create_user_player(sender, instance, created, **kwargs):
     if created:
@@ -76,8 +95,6 @@ def create_user_player(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_player(sender, instance, **kwargs):
     instance.player.save()
-
-
 
 
 

@@ -79,3 +79,21 @@ def map(request):
 def say(request):
     # IMPLEMENT
     return JsonResponse({'error':"Not yet implemented"}, safe=True, status=500)
+
+
+@api_view(["POST"])
+def pickup(request):
+    player = request.user.player
+    data = json.loads(request.body)
+    item_id = request.body["item"]
+    player.get(item_id)
+    room.remove_item(item_id)
+    return JsonRespons({ 'items': player.items_carrying })
+
+@api_view(["POST"])
+def drop(request):
+    player = request.user.player
+    data = json.loads(request.body)
+    player.drop(item_id)
+    room.add_item(item_id)
+    return JsonResponse({ 'items': player.items_carrying })

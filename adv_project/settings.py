@@ -31,6 +31,9 @@ DEBUG = config('DEBUG', cast=bool)
 ALLOWED_HOSTS = [
     'http://lambdalegends.herokuapp.com/',
 ]
+# ALLOWED_HOSTS = [
+   
+# ]
 
 
 # Application definition

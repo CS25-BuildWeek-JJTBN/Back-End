@@ -65,3 +65,25 @@ def move(request):
 def say(request):
     # IMPLEMENT
     return JsonResponse({'error':"Not yet implemented"}, safe=True, status=500)
+
+
+
+@csrf_exempt
+@api_view(["GET"])
+def all_rooms(request):
+    return JsonResponse(Room.objects.all())
+
+
+@csrf_exempt
+@api_view(["POST"])
+def pickup(request):
+    pass
+
+@csrf_exempt
+@api_view(["DROP"])
+def pickup(request):
+    pass
+
+
+
+

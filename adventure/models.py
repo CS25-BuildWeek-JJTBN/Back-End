@@ -65,6 +65,12 @@ def save_user_player(sender, instance, **kwargs):
     instance.player.save()
 
 
+class Item(models.Model):
+    description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
+    
+
+
+
 
 
 

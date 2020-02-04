@@ -46,12 +46,18 @@ while rooms:
 
     # Save the room in the World grid
     grid[y][x] = room
+    room.x = x
+    room.y = y
     # Connect the new room to the previous room
     if previous_room is not None:
         previous_room.connectRooms(room, room_direction)
         room.connectRooms(previous_room, directions_text[room_direction])
+        previous_room.save()
+    room.save()
+
     rooms[0], rooms[-1] = rooms[-1], rooms[0]
     rooms.pop()
+
     # Update iteration variables
     previous_room = room
 # r_outside = Room(title="Outside Cave Entrance",

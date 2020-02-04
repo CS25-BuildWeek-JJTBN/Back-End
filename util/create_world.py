@@ -12,17 +12,48 @@ for i, line in enumerate(arr):
         description = description[1:]
     rooms[i] = Room(title=title, description=description)
     rooms[i].save()
-starting_room = rooms[0]
-rooms[0], rooms[-1] = rooms[-1], rooms[0]
-rooms.pop()
+
 grid = [[0] * 11 for _ in range(11)]
 random.shuffle(rooms)
-current_x = -1
-current_y = 0
 
 directions = [(-1,0), (1,0), (0,-1), (0,1)]
+directions_text = {'w': 'e', 'e': 'w', 'n':'s', 's':'n'}
+
+# starting_room = rooms[0]
+# rooms[0], rooms[-1] = rooms[-1], rooms[0]
+# rooms.pop()
+
+previous_room = None
+x = -1
+y = 0
+direction = 1
 while rooms:
-    pass
+    if direction > 0 and x < len(grid) - 1:
+        room_direction = "e"
+        x += 1
+    elif direction < 0 and x > 0:
+        room_direction = "w"
+        x -= 1
+    else:
+        # If we hit a wall, turn north and reverse direction
+        room_direction = "n"
+        y += 1
+        direction *= -1
+
+    # Create a room in the given direction
+    room = rooms[0]
+    # Note that in Django, you'll need to save the room after you create it
+
+    # Save the room in the World grid
+    grid[y][x] = room
+    # Connect the new room to the previous room
+    if previous_room is not None:
+        previous_room.connectRooms(room, room_direction)
+        room.connectRooms(previous_room, directions_text[room_direction])
+    rooms[0], rooms[-1] = rooms[-1], rooms[0]
+    rooms.pop()
+    # Update iteration variables
+    previous_room = room
 # r_outside = Room(title="Outside Cave Entrance",
 #                description="North of you, the cave mount beckons")
 #

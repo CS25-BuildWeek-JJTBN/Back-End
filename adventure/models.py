@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 import uuid
+import json
 
 class Room(models.Model):
     title = models.CharField(max_length=500, default="DEFAULT TITLE")
@@ -37,6 +38,16 @@ class Room(models.Model):
         return [p.user.username for p in Player.objects.filter(currentRoom=self.id) if p.id != int(currentPlayerID)]
     def playerUUIDs(self, currentPlayerID):
         return [p.uuid for p in Player.objects.filter(currentRoom=self.id) if p.id != int(currentPlayerID)]
+    def toJSON(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'n_to': self.n_to,
+            's_to': self.s_to,
+            'e_to': self.e_to,
+            'w_to': self.w_to
+        }
 
 
 class Player(models.Model):

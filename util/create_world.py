@@ -27,6 +27,7 @@ previous_room = None
 x = -1
 y = 0
 direction = 1
+# NEED TO STORE STARTING COORDINATE SOMEWHERE
 while rooms:
     if direction > 0 and x < len(grid) - 1:
         room_direction = "e"
@@ -60,6 +61,11 @@ while rooms:
 
     # Update iteration variables
     previous_room = room
+
+players = Player.objects.all()
+for p in players:
+    p.currentRoom = grid[0][0].id
+    p.save()
 # r_outside = Room(title="Outside Cave Entrance",
 #                description="North of you, the cave mount beckons")
 #

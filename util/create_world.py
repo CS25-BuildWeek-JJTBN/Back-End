@@ -37,7 +37,7 @@ while rooms:
         x -= 1
     else:
         # If we hit a wall, turn north and reverse direction
-        room_direction = "n"
+        room_direction = "s"
         y += 1
         direction *= -1
 

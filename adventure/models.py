@@ -54,12 +54,14 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     currentRoom = models.IntegerField(default=0)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
+    visited_rooms = models.ManyToManyField(Room)
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.first().id
             self.save()
     def room(self):
         try:
+            self.visited_rooms.add(Room.objects.get(id=self.currentRoom))
             return Room.objects.get(id=self.currentRoom)
         except Room.DoesNotExist:
             self.initialize()

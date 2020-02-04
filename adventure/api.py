@@ -60,6 +60,14 @@ def move(request):
         return JsonResponse({'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
 
 
+@api_view(["GET"])
+def map(request):
+    rooms = Room.objects.all()
+    grid = [[0] * 11 for _ in range(11)]
+    start = (0,0)
+    for room in rooms:
+        grid[room.y][room.x] = room.toJSON()
+    return JsonResponse({'map': grid, 'start_x': start[0], 'start_y': start[1]}, safe=True)
 @csrf_exempt
 @api_view(["POST"])
 def say(request):

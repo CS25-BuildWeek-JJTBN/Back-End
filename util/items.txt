@@ -1,0 +1,3 @@
+Hat,Black
+Hat,Blue
+Chicken Nugget,Golden

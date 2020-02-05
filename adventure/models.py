@@ -115,10 +115,10 @@ class Player(models.Model):
 
     def get_rooms(self):
         visited_rooms = self.visited_rooms.all()
-        new_rooms = [None] * len(visited_rooms)
+        new_rooms = {}
         for i in range(len(visited_rooms)):
             room = visited_rooms[i]
-            new_rooms[i] = {'id': room.id, 'title': room.title, 'description': room.description}
+            new_rooms[room.id] = {'id': room.id, 'title': room.title, 'description': room.description}
         return new_rooms
 
 

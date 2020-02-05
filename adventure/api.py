@@ -97,3 +97,10 @@ def drop(request):
     player.drop(item_id)
     room.add_item(item_id)
     return JsonResponse({ 'items': player.items_carrying })
+
+
+@api_view(["PUT"])
+def update(request):
+    player = request.user.player
+    data = json.loads(request.body)
+    return JsonResponse({'name':player.user.username, 'skin_tone': player.user.skin_ton, 'pupil_color': player.user.pupil_color, 'glasses_color': player.user.glasses_color, 'glasses_style': player.user.glasses, 'hoodie_color': player.user.hoodie_color,  'pants_color': player.user.pants_color, 'shoe_color': player.user.shoe_color }, safe=True)

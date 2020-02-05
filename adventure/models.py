@@ -94,7 +94,7 @@ class Player(models.Model):
     items_carrying = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, null=True)
     def initialize(self):
         if self.currentRoom == 0:
-            self.currentRoom = Room.objects.first().id
+            self.currentRoom = Room.objects.filter(start=True)[0].id
             self.save()
     def room(self):
         try:

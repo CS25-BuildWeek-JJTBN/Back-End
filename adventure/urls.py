@@ -7,5 +7,6 @@ urlpatterns = [
     url('say', api.say),
     url('map', api.map),
     url('pickup', api.pickup),
-    url('drop', api.drop)
+    url('drop', api.drop),
+    url('player-update', api.update)
 ]

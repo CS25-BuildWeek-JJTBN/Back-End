@@ -57,7 +57,8 @@ class Room(models.Model):
         Room.items.add(item)
 
 class Item(models.Model):
-    description = description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
+    description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
+    color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
     room = models.ForeignKey(Room, default=None, on_delete=models.CASCADE, null=True)
 
 class Player(models.Model):
@@ -67,7 +68,11 @@ class Player(models.Model):
     visited_rooms = models.ManyToManyField(Room)
     skin_tone = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
     pupil_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    glasses = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    glasses_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    glasses_style = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    hoodie_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    pants_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    shoe_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
     items_carrying = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, null=True)
     def initialize(self):
         if self.currentRoom == 0:

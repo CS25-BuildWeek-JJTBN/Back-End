@@ -70,7 +70,8 @@ def move(request):
 def map(request):
     rooms = Room.objects.all()
     grid = [[0] * 11 for _ in range(11)]
-    start = (0,0)
+    starting_room = Room.objects.filter(start=True)[0]
+    start = (starting_room.x,starting_room.y)
     for room in rooms:
         grid[room.y][room.x] = room.toJSON()
     return JsonResponse({'map': grid, 'start_x': start[0], 'start_y': start[1]}, safe=True)

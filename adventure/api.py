@@ -51,6 +51,7 @@ def move(request):
         nextRoomID = room.w_to
     if nextRoomID is not None and nextRoomID > 0:
         nextRoom = Room.objects.get(id=nextRoomID)
+        player.visited_rooms.add(nextRoom)
         player.currentRoom=nextRoomID
         player.save()
         players = nextRoom.playerNames(player_id)
@@ -69,7 +70,7 @@ def move(request):
 @api_view(["GET"])
 def map(request):
     rooms = Room.objects.all()
-    grid = [[0] * 11 for _ in range(11)]
+    grid = [[0] * 11 for _ in range(11)]\
     starting_room = Room.objects.filter(start=True)[0]
     start = (starting_room.x,starting_room.y)
     for room in rooms:

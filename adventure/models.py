@@ -65,7 +65,10 @@ class Player(models.Model):
     currentRoom = models.IntegerField(default=0)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     visited_rooms = models.ManyToManyField(Room)
-    # items_carrying = models.M anyToManyField(Item)
+    skin_tone = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    pupil_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    glasses = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    items_carrying = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, null=True)
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.first().id
@@ -78,11 +81,13 @@ class Player(models.Model):
             self.initialize()
             return self.room()
     def get(self, item_id):
-        # item = Item.objects.get(id=item_id)
+        item = Item.objects.get(id=item_id)
         self.items_carrying.add(item)
+        self.save()
     def drop(self, item_id):
-        # item = Item.objects.remove(id=item_id)
+        item = Item.objects.remove(id=item_id)
         self.items_carrying.remove(item)
+        self.save()
 
 
 @receiver(post_save, sender=User)

@@ -15,6 +15,7 @@ class Room(models.Model):
     w_to = models.IntegerField(default=0)
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
+    start = models.BooleanField(default=False)
     def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:
@@ -46,7 +47,8 @@ class Room(models.Model):
             'n_to': self.n_to,
             's_to': self.s_to,
             'e_to': self.e_to,
-            'w_to': self.w_to
+            'w_to': self.w_to,
+            'starting': self.start
         }
     def remove_item(self, item_id):
         item = Item.objects.get(id=item_id)

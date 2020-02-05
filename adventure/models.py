@@ -48,13 +48,27 @@ class Room(models.Model):
             'e_to': self.e_to,
             'w_to': self.w_to
         }
+    def remove_item(self, item_id):
+        item = Item.objects.get(id=item_id)
+        Room.items.remove(item)
 
+    def add_item(self, item_id):
+        item = Item.objects.get(id=item_id)
+        Room.items.add(item)
+
+class Item(models.Model):
+    description = description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
+    room = models.ForeignKey(Room, default=None, on_delete=models.CASCADE, null=True)
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     currentRoom = models.IntegerField(default=0)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     visited_rooms = models.ManyToManyField(Room)
+    skin_tone = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    pupil_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    glasses = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    items_carrying = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, null=True)
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.first().id
@@ -66,6 +80,15 @@ class Player(models.Model):
         except Room.DoesNotExist:
             self.initialize()
             return self.room()
+    def get(self, item_id):
+        item = Item.objects.get(id=item_id)
+        self.items_carrying.add(item)
+        self.save()
+    def drop(self, item_id):
+        item = Item.objects.remove(id=item_id)
+        self.items_carrying.remove(item)
+        self.save()
+
 
 @receiver(post_save, sender=User)
 def create_user_player(sender, instance, created, **kwargs):
@@ -76,8 +99,6 @@ def create_user_player(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_player(sender, instance, **kwargs):
     instance.player.save()
-
-
 
 
 

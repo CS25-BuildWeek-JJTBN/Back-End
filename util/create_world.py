@@ -1,11 +1,19 @@
 from django.contrib.auth.models import User
-from adventure.models import Player, Room
+from adventure.models import Player, Room, Item
 import random
 
 Room.objects.all().delete()
+Item.objects.all().delete()
 f = open('util/questions2.txt', 'r')
 arr = f.read().split('\n')
 rooms = [0]*len(arr)
+item0 = Item(description="Its A Tomoto")
+item0.save()
+print(item0)
+item1 = Item(description="Its a hat")
+item1.save()
+item2 = Item(description="baseball bat")
+item2.save()
 for i, line in enumerate(arr):
     title, description = line.split(',')
     if description[0] == " ":

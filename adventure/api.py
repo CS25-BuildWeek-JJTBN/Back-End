@@ -21,26 +21,21 @@ def initialize(request):
     uuid = player.uuid
     room = player.room()
     players = room.playerNames(player_id)
-    visited_rooms = player.visited_rooms.all()
-    new_rooms = [None]*len(visited_rooms)
-    for i in range(len(visited_rooms)):
-        room = visited_rooms[i]
-        new_rooms[i] = {'id': room.id, 'title': room.title, 'description': room.description}
-    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'visited_rooms': new_rooms}, safe=True)
+    visited_rooms = player.get_rooms()
+    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title': room.title, 'description':room.description, 'players':players, 'visited_rooms': visited_rooms}, safe=True)
 
 
 # @csrf_exempt
 @api_view(["POST"])
 def move(request):
-    dirs={"n": "north", "s": "south", "e": "east", "w": "west"}
-    reverse_dirs = {"n": "south", "s": "north", "e": "west", "w": "east"}
+    # dirs={"n": "north", "s": "south", "e": "east", "w": "west"}
+    # reverse_dirs = {"n": "south", "s": "north", "e": "west", "w": "east"}
     player = request.user.player
     player_id = player.id
-    player_uuid = player.uuid
+    # player_uuid = player.uuid
     data = json.loads(request.body)
     direction = data['direction']
     room = player.room()
-    items = Item.objects.filter(room_id=room.id)
     nextRoomID = None
     if direction == "n":
         nextRoomID = room.n_to
@@ -52,17 +47,21 @@ def move(request):
         nextRoomID = room.w_to
     if nextRoomID is not None and nextRoomID > 0:
         nextRoom = Room.objects.get(id=nextRoomID)
+        items = Item.objects.filter(room_id=nextRoomID)
+        new_items = [0]*len(items)
+        for i in range(len(items)):
+            new_items[i] = items[i].toJSON()
         player.visited_rooms.add(nextRoom)
         player.currentRoom=nextRoomID
         player.save()
         players = nextRoom.playerNames(player_id)
-        currentPlayerUUIDs = room.playerUUIDs(player_id)
-        nextPlayerUUIDs = nextRoom.playerUUIDs(player_id)
+        # currentPlayerUUIDs = room.playerUUIDs(player_id)
+        # nextPlayerUUIDs = nextRoom.playerUUIDs(player_id)
         # for p_uuid in currentPlayerUUIDs:
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
         # for p_uuid in nextPlayerUUIDs:
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
-        return JsonResponse({'id': nextRoom.id, 'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'room_items': items, players':players, 'error_msg':""}, safe=True)
+        return JsonResponse({'id': nextRoom.id, 'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'room_items': new_items, 'players':players, 'error_msg':""}, safe=True)
     else:
         players = room.playerNames(player_id)
         return JsonResponse({'id': room.id, 'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
@@ -71,12 +70,14 @@ def move(request):
 @api_view(["GET"])
 def map(request):
     rooms = Room.objects.all()
-    grid = [[0] * 11 for _ in range(11)]\
+    grid = [[0] * 11 for _ in range(11)]
     starting_room = Room.objects.filter(start=True)[0]
     start = (starting_room.x,starting_room.y)
     for room in rooms:
         grid[room.y][room.x] = room.toJSON()
     return JsonResponse({'map': grid, 'start_x': start[0], 'start_y': start[1]}, safe=True)
+
+
 @csrf_exempt
 @api_view(["POST"])
 def say(request):
@@ -89,17 +90,28 @@ def pickup(request):
     player = request.user.player
     data = json.loads(request.body)
     item_id = request.body["item"]
-    player.get(item_id)
-    room.remove_item(item_id)
-    return JsonResponse({ 'items': player.items_carrying })
+    room_id = request.body["room"]
+    item = Item.objects.get(id=item_id)
+    room = Room.objects.get(id=room_id)
+    if item and room:
+        player_items = player.get(item)
+        room_items = room.remove_item(item)
+        return JsonResponse({ 'player_items': player_items, 'room_items': room_items })
+    else:
+        return JsonResponse({ 'error': "Could not pick up item"})
 
 @api_view(["POST"])
 def drop(request):
     player = request.user.player
     data = json.loads(request.body)
-    player.drop(item_id)
-    room.add_item(item_id)
-    return JsonResponse({ 'items': player.items_carrying })
+    item_id = request.body["item"]
+    room_id = request.body["room"]
+    item = Item.objects.get(id=item_id)
+    room = Room.objects.get(id=room_id)
+    if item and room:
+        player_items = player.drop(item)
+        room_items = room.add_item(item)
+    return JsonResponse({ 'player_items': player_items, 'room_items': room_items })
 
 
 @api_view(["PUT"])

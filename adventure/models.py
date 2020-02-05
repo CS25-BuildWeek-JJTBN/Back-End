@@ -50,18 +50,34 @@ class Room(models.Model):
             'w_to': self.w_to,
             'starting': self.start
         }
-    def remove_item(self, item_id):
-        item = Item.objects.get(id=item_id)
-        Room.items.remove(item)
+    def remove_item(self, item):
+        self.item_set.remove(item)
+        self.save()
+        return self.getItems()
 
-    def add_item(self, item_id):
-        item = Item.objects.get(id=item_id)
-        Room.items.add(item)
+    def add_item(self, item):
+        self.item_set.add(item)
+        self.save()
+        return self.getItems()
+
+    def getItems(self):
+        items = self.item_set.all()
+        new_items = [None]*len(items)
+        for i in range(len(items)):
+            item = items[i]
+            new_items[i] = item.toJSON()
+        return new_items
 
 class Item(models.Model):
     description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
     color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
     room = models.ForeignKey(Room, default=None, on_delete=models.CASCADE, null=True)
+    def toJSON(self):
+        return {
+            'id': self.id,
+            'description': self.description,
+            'color': self.color,
+        }
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -87,14 +103,31 @@ class Player(models.Model):
         except Room.DoesNotExist:
             self.initialize()
             return self.room()
-    def get(self, item_id):
-        item = Item.objects.get(id=item_id)
+    def get(self, item):
         self.items_carrying.add(item)
         self.save()
-    def drop(self, item_id):
-        item = Item.objects.remove(id=item_id)
+        return self.getItems()
+
+    def drop(self, item):
         self.items_carrying.remove(item)
         self.save()
+        return self.getItems()
+
+    def getItems(self):
+        items = self.items_carrying.all()
+        new_items = [None] * len(items)
+        for i in range(len(items)):
+            item = items[i]
+            new_items[i] = item.toJSON()
+        return new_items
+
+    def get_rooms(self):
+        visited_rooms = self.visited_rooms.all()
+        new_rooms = [None]*len(visited_rooms)
+        for i in range(len(visited_rooms)):
+            room = visited_rooms[i]
+            new_rooms[i] = {'id': room.id, 'title': room.title, 'description': room.description}
+        return new_rooms
 
 
 @receiver(post_save, sender=User)

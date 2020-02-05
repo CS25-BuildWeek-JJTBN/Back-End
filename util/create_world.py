@@ -1,17 +1,27 @@
 from django.contrib.auth.models import User
-from adventure.models import Player, Room
+from adventure.models import Player, Room, Item
 import random
 
 Room.objects.all().delete()
 f = open('util/questions2.txt', 'r')
 arr = f.read().split('\n')
 rooms = [0]*len(arr)
+item0 = Item("Its A Tomoto")
+print(item0)
+item1 = Item("Its a hat")
+item2 = Item("baseball bat")
 for i, line in enumerate(arr):
     title, description = line.split(',')
     if description[0] == " ":
         description = description[1:]
     rooms[i] = Room(title=title, description=description)
     rooms[i].save()
+    # if i == 1:
+    #     rooms[i].add_item(item0)
+    # if i == 2:
+    #     rooms[i].add_item(item1)
+    # if i == 4:
+    #     rooms[i].add_item(item2)
 
 grid = [[0] * 11 for _ in range(11)]
 random.shuffle(rooms)

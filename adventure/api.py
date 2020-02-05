@@ -88,7 +88,7 @@ def pickup(request):
     item_id = request.body["item"]
     player.get(item_id)
     room.remove_item(item_id)
-    return JsonRespons({ 'items': player.items_carrying })
+    return JsonResponse({ 'items': player.items_carrying })
 
 @api_view(["POST"])
 def drop(request):

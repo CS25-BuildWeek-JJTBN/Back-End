@@ -6,6 +6,9 @@ from rest_framework.authtoken.models import Token
 import uuid
 import json
 
+class Item(models.Model):
+    description = description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
+
 class Room(models.Model):
     title = models.CharField(max_length=500, default="DEFAULT TITLE")
     description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
@@ -15,7 +18,7 @@ class Room(models.Model):
     w_to = models.IntegerField(default=0)
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
-    items = models.OneToManyField(Item)
+    items = models.ForeignKey(Item, default=0, on_delete=models.CASCADE)
     def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:
@@ -57,9 +60,6 @@ class Room(models.Model):
         item = Item.objects.get(id=item_id)
         Room.items.add(item)
 
-class Item(models.Model):
-    description = description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
-
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -85,7 +85,7 @@ class Player(models.Model):
         item = Item.objects.remove(id=item_id)
         self.items_carrying.remove(item)
 
-        
+
 @receiver(post_save, sender=User)
 def create_user_player(sender, instance, created, **kwargs):
     if created:

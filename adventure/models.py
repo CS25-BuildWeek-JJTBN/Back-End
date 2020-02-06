@@ -121,6 +121,16 @@ class Player(models.Model):
             new_rooms[room.id] = {'id': room.id, 'title': room.title, 'description': room.description}
         return new_rooms
 
+    def updatePlayer(self, data):
+        self.skin_tone = data["skin_tone"]
+        self.pupil_color = data["pupil_color"]
+        self.glasses_color = data["glasses_color"]
+        self.glasses_style = data["glasses_style"]
+        self.hoodie_color = data["hoodie_color"]
+        self.pants_color = data["pants_color"]
+        self.shoe_color = data["shoe_color"]
+        self.save()
+        return 
 
 class Item(models.Model):
     description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")

@@ -97,7 +97,7 @@ def pickup(request):
     if item and room:
         player_items = player.get(item)
         room_items = room.remove_item(item)
-        return JsonResponse({ 'player_items': player_items, 'room_items': room_items })
+        return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
     else:
         return JsonResponse({ 'error': "Could not pick up item"})
 
@@ -112,7 +112,7 @@ def drop(request):
     if item and room:
         player_items = player.drop(item)
         room_items = room.add_item(item)
-    return JsonResponse({ 'player_items': player_items, 'room_items': room_items })
+    return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
 
 @csrf_exempt
 @api_view(["GET"])

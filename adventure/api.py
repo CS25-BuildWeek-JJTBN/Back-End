@@ -79,7 +79,7 @@ def move(request):
 @api_view(["GET"])
 def map(request):
     rooms = Room.objects.all()
-    grid = [[0] * 11 for _ in range(11)]
+    grid = [[0]*19 for i in range(9)]
     starting_room = Room.objects.filter(start=True)[0]
     start = (starting_room.x,starting_room.y)
     for room in rooms:
@@ -91,7 +91,7 @@ def map(request):
 @api_view(["POST"])
 def say(request):
     # IMPLEMENT
-    return pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
+    return pusher_client.trigger('', 'my-event', {'message': 'hello world'})
     # return JsonResponse({'error':"Not yet implemented"}, safe=True, status=500)
 
 

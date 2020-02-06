@@ -74,13 +74,13 @@ class Player(models.Model):
     currentRoom = models.IntegerField(default=0)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     visited_rooms = models.ManyToManyField(Room)
-    skin_tone = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    pupil_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    glasses_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    glasses_style = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    hoodie_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    pants_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
-    shoe_color = models.CharField(max_length=50, default="DEFAULT DESCRIPTION")
+    skin_tone = models.CharField(max_length=50, default="#e0ac69")
+    pupil_color = models.CharField(max_length=50, default="#634e34")
+    glasses_color = models.CharField(max_length=50, default="#FFFFFF")
+    glasses_style = models.CharField(max_length=50, default="Square")
+    hoodie_color = models.CharField(max_length=50, default="gray")
+    pants_color = models.CharField(max_length=50, default="darkblue")
+    shoe_color = models.CharField(max_length=50, default="white")
 
     def initialize(self):
         if self.currentRoom == 0:

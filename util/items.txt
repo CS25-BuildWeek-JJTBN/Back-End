@@ -13,3 +13,8 @@ Glasses,Red
 Glasses,Yellow
 Headphones,Blue-Red
 Headphones,Black-Red
+Rock,Gray
+Coal,Black
+Chicken Nugget,Green
+Dollar Bill,Green
+Book,Blue

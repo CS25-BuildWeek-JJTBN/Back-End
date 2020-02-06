@@ -13,25 +13,28 @@ with open('util/questions2.txt', 'r') as f:
         title, description = line.split(',')
         rooms[i] = Room(title=title, description=description)
         rooms[i].save()
-
-
+hallways = [0] * 45
+for i in range(len(hallways)):
+    hallways[i] = Room(title="No question. Just an empty hallway.", description="No resource available")
+    hallways[i].save()
+rooms = rooms + hallways
 starting_room = rooms[0]
 rooms[0], rooms[-1] = rooms[-1], rooms[0]
 rooms.pop()
 random.shuffle(rooms)
 
-grid = [[0]*11 for i in range(11)]
-x, y = random.randint(0, 10), 0
+grid = [[0]*18 for i in range(10)]
+x, y = random.randint(0,17), 5
 
 grid[y][x] = starting_room
-starting_room.x, starting_room.y = x,y
+starting_room.x, starting_room.y = x, y
 starting_room.start = True
 starting_room.save()
 
 def valid_coord(x,y,grid):
     rows = len(grid)
     cols = len(grid[0])
-    return 0 <= x < rows and 0 <= y < cols
+    return 0 <= y < rows and 0 <= x < cols
 
 def free_spot(x,y,grid):
     return not grid[y][x]
@@ -46,7 +49,7 @@ while q:
     random.shuffle(directions)
     for _ in range(len(q)):
         x, y, room = q.popleft()
-        for i in range(random.randint(1,4)):
+        for i in range(random.randint(2,4)):
             dx, dy = directions[i]
             if dx > 0 and dy == 0:
                 dir_text = 'e'

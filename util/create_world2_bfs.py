@@ -23,8 +23,8 @@ rooms[0], rooms[-1] = rooms[-1], rooms[0]
 rooms.pop()
 random.shuffle(rooms)
 
-grid = [[0]*18 for i in range(10)]
-x, y = random.randint(0,17), 5
+grid = [[0]*19 for i in range(9)]
+x, y = random.randint(0,18), 5
 
 grid[y][x] = starting_room
 starting_room.x, starting_room.y = x, y

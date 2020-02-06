@@ -70,7 +70,7 @@ def move(request):
 @api_view(["GET"])
 def map(request):
     rooms = Room.objects.all()
-    grid = [[0]*18 for i in range(10)]
+    grid = [[0]*19 for i in range(9)]
     starting_room = Room.objects.filter(start=True)[0]
     start = (starting_room.x,starting_room.y)
     for room in rooms:

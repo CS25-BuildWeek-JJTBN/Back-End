@@ -115,7 +115,7 @@ def drop(request):
     return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
 
 @csrf_exempt
-@api_view(["GET"])
+@api_view(["PUT"])
 def update(request):
     player = request.user.player
     data = json.loads(request.body)

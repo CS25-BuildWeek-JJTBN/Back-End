@@ -2,7 +2,7 @@ from adventure.models import Player, Room, Item
 import collections
 import random
 
-Item.objects.all().delete()
+# Item.objects.all().delete()
 
 with open('util/items.txt', 'r') as f:
     items = []

@@ -114,10 +114,12 @@ def drop(request):
         room_items = room.add_item(item)
     return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
 
-@csrf_exempt
-@api_view(["GET"])
+# @csrf_exempt
+@api_view(["POST"])
 def update(request):
     player = request.user.player
-    data = json.loads(request.body)
-    player.updatePlayer(data)
+    data = request._data
+    for key in data:
+        setattr(player, key, data[key])
+    player.save()
     return JsonResponse({'name':player.user.username, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color,  'pants_color': player.pants_color, 'shoe_color': player.shoe_color }, safe=True)

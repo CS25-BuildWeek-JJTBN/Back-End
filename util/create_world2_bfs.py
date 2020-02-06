@@ -5,13 +5,6 @@ import random
 Room.objects.all().delete()
 Item.objects.all().delete()
 
-item0 = Item(description="Its A Tomoto")
-item0.save()
-item1 = Item(description="Its a hat")
-item1.save()
-item2 = Item(description="baseball bat")
-item2.save()
-
 #
 with open('util/questions2.txt', 'r') as f:
     arr = f.read().split('\n')

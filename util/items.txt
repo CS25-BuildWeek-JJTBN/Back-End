@@ -1,3 +1,15 @@
-Hat,Black
-Hat,Blue
+Hat,Black-Blue
+Hat,Blue-Black
+Hat,Yellow
 Chicken Nugget,Golden
+Laptop,Blue
+Glasses,Red
+Glasses,Yellow
+Sunglasses,Blue-Red
+Sword,Blue
+Book,Red
+Glasses,Blue
+Glasses,Red
+Glasses,Yellow
+Headphones,Blue-Red
+Headphones,Black-Red

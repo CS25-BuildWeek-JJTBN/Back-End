@@ -20,10 +20,11 @@ def initialize(request):
     player_id = player.id
     uuid = player.uuid
     room = player.room()
+    player_items = player.getItems()
     players = room.playerNames(player_id)
     visited_rooms = player.get_rooms()
     items = room.getItems()
-    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title': room.title, 'description':room.description, 'players':players, 'visited_rooms': visited_rooms, 'room_items': items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color}, safe=True)
+    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title': room.title, 'player_items': player_items, 'description':room.description, 'players':players, 'visited_rooms': visited_rooms, 'room_items': items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color}, safe=True)
 
 
 # @csrf_exempt
@@ -88,8 +89,8 @@ def say(request):
 def pickup(request):
     player = request.user.player
     data = json.loads(request.body)
-    item_id = request.body["item"]
-    room_id = request.body["room"]
+    item_id = data["item"]
+    room_id = data["room"]
     item = Item.objects.get(id=item_id)
     room = Room.objects.get(id=room_id)
     if item and room:
@@ -103,8 +104,8 @@ def pickup(request):
 def drop(request):
     player = request.user.player
     data = json.loads(request.body)
-    item_id = request.body["item"]
-    room_id = request.body["room"]
+    item_id = data["item"]
+    room_id = data["room"]
     item = Item.objects.get(id=item_id)
     room = Room.objects.get(id=room_id)
     if item and room:

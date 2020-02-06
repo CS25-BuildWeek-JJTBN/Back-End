@@ -22,7 +22,8 @@ def initialize(request):
     room = player.room()
     players = room.playerNames(player_id)
     visited_rooms = player.get_rooms()
-    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title': room.title, 'description':room.description, 'players':players, 'visited_rooms': visited_rooms, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color}, safe=True)
+    items = room.getItems()
+    return JsonResponse({'id': room.id, 'uuid': uuid, 'name':player.user.username, 'title': room.title, 'description':room.description, 'players':players, 'visited_rooms': visited_rooms, 'room_items': items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color}, safe=True)
 
 
 # @csrf_exempt
@@ -47,10 +48,7 @@ def move(request):
         nextRoomID = room.w_to
     if nextRoomID is not None and nextRoomID > 0:
         nextRoom = Room.objects.get(id=nextRoomID)
-        items = Item.objects.filter(room_id=nextRoomID)
-        new_items = [0]*len(items)
-        for i in range(len(items)):
-            new_items[i] = items[i].toJSON()
+        items = nextRoom.getItems()
         player.visited_rooms.add(nextRoom)
         player.currentRoom=nextRoomID
         player.save()
@@ -62,7 +60,7 @@ def move(request):
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
         # for p_uuid in nextPlayerUUIDs:
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
-        return JsonResponse({'id': nextRoom.id, 'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'room_items': new_items, 'rooms': rooms, 'players':players, 'error_msg':""}, safe=True)
+        return JsonResponse({'id': nextRoom.id, 'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'room_items': items, 'rooms': rooms, 'players':players, 'error_msg':""}, safe=True)
     else:
         players = room.playerNames(player_id)
         return JsonResponse({'id': room.id, 'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
@@ -112,13 +110,15 @@ def drop(request):
     if item and room:
         player_items = player.drop(item)
         room_items = room.add_item(item)
-    return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
+        return JsonResponse({ 'player_items': player_items, 'room_items': room_items, 'skin_tone': player.skin_tone, 'pupil_color': player.pupil_color, 'glasses_color': player.glasses_color, 'glasses_style': player.glasses_style, 'hoodie_color': player.hoodie_color, 'pants_color': player.pants_color, 'shoe_color': player.shoe_color })
+    else:
+        return JsonResponse({ 'error': "Could not drop item"})
 
 # @csrf_exempt
 @api_view(["POST"])
 def update(request):
     player = request.user.player
-    data = request._data
+    data = json.loads(request.body)
     for key in data:
         setattr(player, key, data[key])
     player.save()

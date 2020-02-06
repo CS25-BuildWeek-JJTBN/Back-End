@@ -88,8 +88,8 @@ def say(request):
 def pickup(request):
     player = request.user.player
     data = json.loads(request.body)
-    item_id = request.body["item"]
-    room_id = request.body["room"]
+    item_id = data["item"]
+    room_id = data["room"]
     item = Item.objects.get(id=item_id)
     room = Room.objects.get(id=room_id)
     if item and room:
@@ -103,8 +103,8 @@ def pickup(request):
 def drop(request):
     player = request.user.player
     data = json.loads(request.body)
-    item_id = request.body["item"]
-    room_id = request.body["room"]
+    item_id = data["item"]
+    room_id = data["room"]
     item = Item.objects.get(id=item_id)
     room = Room.objects.get(id=room_id)
     if item and room:

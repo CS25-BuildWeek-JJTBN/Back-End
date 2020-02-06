@@ -13,18 +13,21 @@ with open('util/questions2.txt', 'r') as f:
         title, description = line.split(',')
         rooms[i] = Room(title=title, description=description)
         rooms[i].save()
-
-
+hallways = [0] * 45
+for i in range(len(hallways)):
+    hallways[i] = Room(title="No question. Just an empty hallway.", description="No resource available")
+    hallways[i].save()
+rooms = rooms + hallways
 starting_room = rooms[0]
 rooms[0], rooms[-1] = rooms[-1], rooms[0]
 rooms.pop()
 random.shuffle(rooms)
 
-grid = [[0]*11 for i in range(11)]
-x, y = random.randint(0, 10), 0
+grid = [[0]*18 for i in range(10)]
+x, y = random.randint(0, 17), random.randint(0,9)
 
 grid[y][x] = starting_room
-starting_room.x, starting_room.y = x,y
+starting_room.x, starting_room.y = x, y
 starting_room.start = True
 starting_room.save()
 
@@ -39,7 +42,7 @@ def free_spot(x,y,grid):
 q = collections.deque()
 q.append((x, y, starting_room))
 
-directions = [(-1,0), (1,0), (0,-1), (0,1)]
+directions = [(-1,0), (1,0), (0,-1), (0,1), (-1,0), (1,0)]
 directions_text = {'w': 'e', 'e': 'w', 'n':'s', 's':'n'}
 # BFS GENERATION
 while q:

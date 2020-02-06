@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-# from pusher import Pusher
+from pusher import Pusher
+# import pusher
 from django.http import JsonResponse
 from decouple import config
 from django.contrib.auth.models import User
@@ -9,7 +10,15 @@ from rest_framework.decorators import api_view
 import json
 
 # instantiate pusher
-# pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
+pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
+
+# pusher_client = pusher.Pusher(
+#   app_id=config('PUSHER_APP_ID'),
+#   key=config('PUSHER_KEY'),
+#   secret=config('PUSHER_SECRET'),
+#   cluster=config('PUSHER_CLUSTER'),
+#   ssl=True
+# )
 
 
 @csrf_exempt
@@ -30,11 +39,11 @@ def initialize(request):
 # @csrf_exempt
 @api_view(["POST"])
 def move(request):
-    # dirs={"n": "north", "s": "south", "e": "east", "w": "west"}
-    # reverse_dirs = {"n": "south", "s": "north", "e": "west", "w": "east"}
+    dirs={"n": "north", "s": "south", "e": "east", "w": "west"}
+    reverse_dirs = {"n": "south", "s": "north", "e": "west", "w": "east"}
     player = request.user.player
     player_id = player.id
-    # player_uuid = player.uuid
+    player_uuid = player.uuid
     data = json.loads(request.body)
     direction = data['direction']
     room = player.room()
@@ -55,12 +64,12 @@ def move(request):
         player.save()
         players = nextRoom.playerNames(player_id)
         rooms = player.get_rooms()
-        # currentPlayerUUIDs = room.playerUUIDs(player_id)
-        # nextPlayerUUIDs = nextRoom.playerUUIDs(player_id)
-        # for p_uuid in currentPlayerUUIDs:
-        #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
-        # for p_uuid in nextPlayerUUIDs:
-        #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
+        currentPlayerUUIDs = room.playerUUIDs(player_id)
+        nextPlayerUUIDs = nextRoom.playerUUIDs(player_id)
+        for p_uuid in currentPlayerUUIDs:
+            pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
+        for p_uuid in nextPlayerUUIDs:
+            pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
         return JsonResponse({'id': nextRoom.id, 'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'room_items': items, 'rooms': rooms, 'players':players, 'error_msg':""}, safe=True)
     else:
         players = room.playerNames(player_id)
@@ -82,7 +91,14 @@ def map(request):
 @api_view(["POST"])
 def say(request):
     # IMPLEMENT
-    return JsonResponse({'error':"Not yet implemented"}, safe=True, status=500)
+    player = request.user.player
+    player_id = player.id
+    data = json.loads(request.body)
+    room = Room.objects.get(id=player.currentRoom)
+    currentPlayerUUIDs = room.playerUUIDs(player_id)
+    for p_uuid in currentPlayerUUIDs:
+        pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message': data['message']})
+    return JsonResponse({'message':"Sent"}, safe=True, status=201)
 
 
 @api_view(["POST"])

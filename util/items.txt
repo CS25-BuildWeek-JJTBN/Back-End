@@ -3,14 +3,21 @@ Hat,Blue-Black
 Hat,Yellow
 Chicken Nugget,Golden
 Laptop,Blue
-Glasses,Red
-Glasses,Yellow
 Sunglasses,Blue-Red
 Sword,Blue
 Book,Red
-Glasses,Blue
-Glasses,Red
-Glasses,Yellow
+Hat,Black-Blue
+Hat,Blue-Black
+Hat,Yellow
+Hat,Black-Blue
+Hat,Blue-Black
+Hat,Yellow
+Hat,Black-Blue
+Hat,Blue-Black
+Hat,Yellow
+Glasses,Square-Blue
+Glasses,Square-Red
+Glasses,Square-Yellow
 Headphones,Blue-Red
 Headphones,Black-Red
 Rock,Gray
@@ -18,3 +25,13 @@ Coal,Black
 Chicken Nugget,Green
 Dollar Bill,Green
 Book,Blue
+Glasses,Round-Blue
+Glasses,Round-Red
+Glasses,Round-Yellow
+Sunglasses,Round-Blue
+Sunglasses,Round-Red
+Sunglasses,Round-Yellow
+Sunglasses,Square-Blue-Green
+Sunglasses,Square-Red-Green
+Sunglasses,Square-Yellow-Green
+Trash Can,Gray

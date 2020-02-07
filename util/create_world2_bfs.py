@@ -24,7 +24,7 @@ rooms.pop()
 random.shuffle(rooms)
 
 grid = [[0]*19 for i in range(9)]
-x, y = random.randint(0,18), 5
+x, y = random.randint(2,6), 5
 
 grid[y][x] = starting_room
 starting_room.x, starting_room.y = x, y

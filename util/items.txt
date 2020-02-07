@@ -1,6 +1,6 @@
 Hat,Black-Blue
 Hat,Blue-Black
-Hat,Yellow
+Hat,Yellow-Yellow
 Chicken Nugget,Golden
 Laptop,Blue
 Sunglasses,Blue-Red
@@ -14,7 +14,7 @@ Hat,Blue-Black
 Hat,Yellow
 Hat,Black-Blue
 Hat,Blue-Black
-Hat,Yellow
+Hat,Yellow-Yellow
 Glasses,Square-Blue
 Glasses,Square-Red
 Glasses,Square-Yellow
@@ -28,9 +28,9 @@ Book,Blue
 Glasses,Round-Blue
 Glasses,Round-Red
 Glasses,Round-Yellow
-Sunglasses,Round-Blue
-Sunglasses,Round-Red
-Sunglasses,Round-Yellow
+Sunglasses,Round-Blue-Black
+Sunglasses,Round-Red-Blue
+Sunglasses,Round-Yellow-Green
 Sunglasses,Square-Blue-Green
 Sunglasses,Square-Red-Green
 Sunglasses,Square-Yellow-Green

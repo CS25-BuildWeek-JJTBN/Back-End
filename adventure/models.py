@@ -89,6 +89,7 @@ class Player(models.Model):
     headphone_color = models.CharField(max_length=50, default='')
     hatband_color = models.CharField(max_length=50, default='')
     hat_color = models.CharField(max_length=50, default='')
+    headphone_color_2 = models.CharField(max_length=50, default='')
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.filter(start=True)[0].id
@@ -145,6 +146,7 @@ class Player(models.Model):
             'headphone_color': self.headphone_color,
             'hatband_color': self.hatband_color,
             'hat_color': self.hat_color,
+            'headphone_color_2': self.headphone_color_2
         }
     def updatePlayer(self, data):
         self.skin_tone = data["skin_tone"]

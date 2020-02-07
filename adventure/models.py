@@ -81,7 +81,14 @@ class Player(models.Model):
     hoodie_color = models.CharField(max_length=50, default="gray")
     pants_color = models.CharField(max_length=50, default="darkblue")
     shoe_color = models.CharField(max_length=50, default="white")
-
+    has_sunglasses = models.BooleanField(default=False)
+    has_glasses = models.BooleanField(default=False)
+    has_hat = models.BooleanField(default=False)
+    has_headphones = models.BooleanField(default=False)
+    lens_color = models.CharField(max_length=50, default='')
+    headphone_color = models.CharField(max_length=50, default='')
+    hatband_color = models.CharField(max_length=50, default='')
+    hat_color = models.CharField(max_length=50, default='')
     def initialize(self):
         if self.currentRoom == 0:
             self.currentRoom = Room.objects.filter(start=True)[0].id
@@ -121,6 +128,24 @@ class Player(models.Model):
             new_rooms[room.id] = {'id': room.id, 'title': room.title, 'description': room.description}
         return new_rooms
 
+    def get_traits(self):
+        return {
+            'skin_tone': self.skin_tone,
+            'pupil_color': self.pupil_color,
+            'glasses_color': self.glasses_color,
+            'glasses_style': self.glasses_style,
+            'hoodie_color': self.hoodie_color,
+            'pants_color': self.pants_color,
+            'shoe_color': self.shoe_color,
+            'has_sunglasses': self.has_sunglasses,
+            'has_glasses': self.has_glasses,
+            'has_hat': self.has_hat,
+            'has_headphones': self.has_headphones,
+            'lens_color': self.lens_color,
+            'headphone_color': self.headphone_color,
+            'hatband_color': self.hatband_color,
+            'hat_color': self.hat_color,
+        }
     def updatePlayer(self, data):
         self.skin_tone = data["skin_tone"]
         self.pupil_color = data["pupil_color"]
